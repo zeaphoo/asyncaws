@@ -22,7 +22,7 @@ setup(
     license="MIT",
     keywords=(),
     platforms="any",
-    install_requires=[],
+    install_requires=['loguru'],
     entry_points={
     }
 )

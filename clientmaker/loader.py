@@ -20,41 +20,6 @@ by botocore.  This can include:
     * Other models associated with a service (pagination, waiters)
     * Non service-specific config (Endpoint data, retry config)
 
-Loading a module is broken down into several steps:
-
-    * Determining the path to load
-    * Search the data_path for files to load
-    * The mechanics of loading the file
-    * Searching for extras and applying them to the loaded file
-
-The last item is used so that other faster loading mechanism
-besides the default JSON loader can be used.
-
-The Search Path
-===============
-
-Similar to how the PATH environment variable is to finding executables
-and the PYTHONPATH environment variable is to finding python modules
-to import, the botocore loaders have the concept of a data path exposed
-through AWS_DATA_PATH.
-
-This enables end users to provide additional search paths where we
-will attempt to load models outside of the models we ship with
-botocore.  When you create a ``Loader``, there are two paths
-automatically added to the model search path:
-
-    * <botocore root>/data/
-    * ~/.aws/models
-
-The first value is the path where all the model files shipped with
-botocore are located.
-
-The second path is so that users can just drop new model files in
-``~/.aws/models`` without having to mess around with the AWS_DATA_PATH.
-
-The AWS_DATA_PATH using the platform specific path separator to
-separate entries (typically ``:`` on linux and ``;`` on windows).
-
 
 Directory Layout
 ================
@@ -205,33 +170,18 @@ class Loader(object):
     # The included models in botocore/data/ that we ship with botocore.
     BUILTIN_DATA_PATH = os.path.join(os.getcwd(), 'aws/data')
     # For convenience we automatically add ~/.aws/models to the data path.
-    CUSTOMER_DATA_PATH = os.path.join(os.path.expanduser('~'),
-                                      '.aws', 'models')
     BUILTIN_EXTRAS_TYPES = ['sdk']
 
-    def __init__(self, extra_search_paths=None, file_loader=None,
-                 cache=None, include_default_search_paths=True,
+    def __init__(self, data_path=None,
                  include_default_extras=True):
-        if file_loader is None:
-            file_loader = self.FILE_LOADER_CLASS()
-        self.file_loader = file_loader
-        if extra_search_paths is not None:
-            self._search_paths = extra_search_paths
-        else:
-            self._search_paths = []
-        if include_default_search_paths:
-            self._search_paths.extend([self.CUSTOMER_DATA_PATH,
-                                       self.BUILTIN_DATA_PATH])
+        self.file_loader = self.FILE_LOADER_CLASS()
+        self.data_path = data_path or self.BUILTIN_DATA_PATH
 
         self._extras_types = []
         if include_default_extras:
             self._extras_types.extend(self.BUILTIN_EXTRAS_TYPES)
 
         self._extras_processor = ExtrasProcessor()
-
-    @property
-    def search_paths(self):
-        return self._search_paths
 
     @property
     def extras_types(self):

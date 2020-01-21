@@ -5,16 +5,16 @@ import sys
 import io
 import re
 
-with io.open('clientmaker/__init__.py', 'rt', encoding='utf8') as f:
+with io.open('asyncaws/__init__.py', 'rt', encoding='utf8') as f:
     version = re.search(r'__version__ = \'(.*?)\'', f.read()).group(1)
 
 setup(
-    name="clientmaker",
+    name="asyncaws",
     version=version,
     packages=find_packages(exclude=["tests.*", "tests"]),
-    description="service client auto generator",
-    long_description="service client auto generator",
-    url='http://github.com/zeaphoo/clientmaker/',
+    description="asyncio aws sdk",
+    long_description="asyncio aws sdk",
+    url='http://github.com/zeaphoo/asyncaws/',
     author="wei.zhuo",
     author_email="zeaphoo@qq.com",
     include_package_data=True,

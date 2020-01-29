@@ -2,12 +2,14 @@
 import sys
 import os
 from loguru import logger
-from clientmaker.loader import SchemaLoader
+from clientmaker.model import SchemaLoader
 from clientmaker.model import ServiceModel
-from clientmaker.waiter import WaiterModel
-from clientmaker.paginator import PaginatorModel
-from clientmaker.endpoint import EndpointModel
-from clientmaker.retry import RetryModel
+from clientmaker.model import WaiterModel
+from clientmaker.model import PaginatorModel
+from clientmaker.model import EndpointModel
+from clientmaker.model import RetryModel
+from clientmaker.model import AllServices
+
 
 class ClientMaker(object):
     def __init__(self):
@@ -19,9 +21,8 @@ class ClientMaker(object):
     
     def make(self):
         logger.info('start to make client.')
-        loader = SchemaLoader(self.data_path)
-        model_data = loader.load_service_model('s3', 'service')
-        model = ServiceModel(model_data)
+        loader = SchemaLoader.get_loader(self.data_path)
+        model = ServiceModel.load(self.data_path, "s3")
         logger.info(model.operation_names)
         model_data = loader.load_service_model('s3', 'waiters')
         model = WaiterModel(model_data)

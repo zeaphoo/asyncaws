@@ -17,6 +17,7 @@ from clientmaker.utils import CachedProperty
 from collections import OrderedDict
 from clientmaker.exceptions import MissingServiceIdError
 from clientmaker.exceptions import UndefinedModelAttributeError
+from .loader import SchemaLoader
 
 NOT_SET = object()
 
@@ -253,6 +254,11 @@ class ServiceModel(object):
         self._signature_version = NOT_SET
         self._service_name = service_name
 
+    @classmethod
+    def load(cls, data_path, service_name):
+        loader = SchemaLoader.get_loader(data_path)
+        return cls(loader.load_service_model(service_name, "service"))
+
     def shape_for(self, shape_name, member_traits=None):
         return self._shape_resolver.get_shape_by_name(
             shape_name, member_traits)
@@ -362,66 +368,7 @@ class ServiceModel(object):
     def __repr__(self):
         return '%s(%s)' % (self.__class__.__name__, self.service_name)
 
-class WaiterModel(object):
-    SUPPORTED_VERSION = 2
 
-    def __init__(self, waiter_config):
-        """
-        Note that the WaiterModel takes ownership of the waiter_config.
-        It may or may not mutate the waiter_config.  If this is a concern,
-        it is best to make a copy of the waiter config before passing it to
-        the WaiterModel.
-        :type waiter_config: dict
-        :param waiter_config: The loaded waiter config
-            from the <service>*.waiters.json file.  This can be
-            obtained from a botocore Loader object as well.
-        """
-        self._waiter_config = waiter_config['waiters']
-
-        # These are part of the public API.  Changing these
-        # will result in having to update the consuming code,
-        # so don't change unless you really need to.
-        version = waiter_config.get('version', 'unknown')
-        self._verify_supported_version(version)
-        self.version = version
-        self.waiter_names = list(sorted(waiter_config['waiters'].keys()))
-
-    def _verify_supported_version(self, version):
-        if version != self.SUPPORTED_VERSION:
-            raise Exception("Unsupported waiter version, supported version "
-                           "must be: %s, but version of waiter config "
-                           "is: %s" % (self.SUPPORTED_VERSION,
-                                       version))
-
-    def get_waiter(self, waiter_name):
-        try:
-            single_waiter_config = self._waiter_config[waiter_name]
-        except KeyError:
-            raise ValueError("Waiter does not exist: %s" % waiter_name)
-        return SingleWaiterConfig(single_waiter_config)
-
-class SingleWaiterConfig(object):
-    """Represents the waiter configuration for a single waiter.
-    A single waiter is considered the configuration for a single
-    value associated with a named waiter (i.e TableExists).
-    """
-    def __init__(self, single_waiter_config):
-        self._config = single_waiter_config
-
-        # These attributes are part of the public API.
-        self.description = single_waiter_config.get('description', '')
-        # Per the spec, these three fields are required.
-        self.operation = single_waiter_config['operation']
-        self.delay = single_waiter_config['delay']
-        self.max_attempts = single_waiter_config['maxAttempts']
-
-    @property
-    def acceptors(self):
-        acceptors = []
-        for acceptor_config in self._config['acceptors']:
-            acceptor = AcceptorConfig(acceptor_config)
-            acceptors.append(acceptor)
-        return acceptors
 
 class OperationModel(object):
     def __init__(self, operation_model, service_model, name=None):

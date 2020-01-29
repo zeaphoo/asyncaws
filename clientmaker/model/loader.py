@@ -94,9 +94,17 @@ def deep_merge(base, extra):
 
 
 class SchemaLoader(object):
+    _loaders = {}
+
     def __init__(self, data_path):
         self.data_path = data_path
         self.services = self.load_services()
+
+    @classmethod
+    def get_loader(cls, data_path):
+        if data_path not in cls._loaders:
+            cls._loaders[data_path] = cls(data_path)
+        return cls._loaders[data_path]
 
     @property
     def extras_types(self):

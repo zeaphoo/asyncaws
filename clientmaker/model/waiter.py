@@ -3,7 +3,7 @@ import jmespath
 import logging
 import time
 
-from .exceptions import WaiterConfigError
+from clientmaker.exceptions import WaiterConfigError
 
 
 class WaiterModel(object):

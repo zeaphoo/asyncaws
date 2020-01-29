@@ -39,3 +39,8 @@ class UnknownServiceError(ClientMakerError):
     fmt = (
         "Unknown service: '{service_name}'. Valid service names are: "
         "{known_service_names}")
+
+
+class WaiterConfigError(ClientMakerError):
+    """Error when processing waiter configuration."""
+    fmt = 'Error processing waiter config: {error_msg}'

@@ -22,7 +22,7 @@ setup(
     license="MIT",
     keywords=(),
     platforms="any",
-    install_requires=['loguru'],
+    install_requires=['httpx'],
     entry_points={
     }
 )

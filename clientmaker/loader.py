@@ -94,7 +94,7 @@ def deep_merge(base, extra):
 
 
 class SchemaLoader(object):
-    BUILTIN_DATA_PATH = os.path.join(os.getcwd(), 'aws/data')
+    BUILTIN_DATA_PATH = os.path.join(os.getcwd(), 'schema_data')
 
     def __init__(self, data_path=None):
         self.data_path = data_path or self.BUILTIN_DATA_PATH

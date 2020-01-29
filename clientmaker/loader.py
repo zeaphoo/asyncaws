@@ -12,8 +12,8 @@
 # language governing permissions and limitations under the License.
 """Module for loading various model files.
 
-This module provides the classes that are used to load models used
-by botocore.  This can include:
+This module provides the classes that are used to load models.  
+This can include:
 
     * Service models (e.g. the model for EC2, S3, DynamoDB, etc.)
     * Service model extras which customize the service models
@@ -94,7 +94,6 @@ def deep_merge(base, extra):
 
 
 class SchemaLoader(object):
-    # The included models in botocore/data/ that we ship with botocore.
     BUILTIN_DATA_PATH = os.path.join(os.getcwd(), 'aws/data')
 
     def __init__(self, data_path=None):
@@ -133,7 +132,7 @@ class SchemaLoader(object):
     def load_service_model(self, service_name, type_name):
         """Load a  service model
 
-        This is the main method for loading botocore models (e.g. a service
+        This is the main method for loading aws models (e.g. a service
         model, pagination configs, waiter configs, etc.).
 
         :type service_name: str

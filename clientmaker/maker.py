@@ -2,6 +2,7 @@
 import sys
 from loguru import logger
 from clientmaker.loader import SchemaLoader
+from clientmaker.model import ServiceModel
 
 class ClientMaker(object):
     def __init__(self):
@@ -13,5 +14,7 @@ class ClientMaker(object):
     def make(self):
         logger.info('start to make client.')
         loader = SchemaLoader()
-        loader.load_service_model('s3', 'service')
+        model_data = loader.load_service_model('s3', 'service')
+        model = ServiceModel(model_data)
+        logger.info(model.operation_names)
         logger.info('make process completed.')

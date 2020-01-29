@@ -1,7 +1,7 @@
 
 class AsyncAWSClientError(Exception):
     """
-    The base exception class for BotoCore exceptions.
+    The base exception class for AsyncAWS exceptions.
 
     :ivar msg: The descriptive message associated with the error.
     """

@@ -1,6 +1,6 @@
 class ClientMakerError(Exception):
     """
-    The base exception class for BotoCore exceptions.
+    The base exception class for ClientMaker exceptions.
 
     :ivar msg: The descriptive message associated with the error.
     """

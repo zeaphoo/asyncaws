@@ -7,4 +7,3 @@ class S3Client(object):
     def create_client(cls, region_name='us-east-1'):
         pass
 
-    

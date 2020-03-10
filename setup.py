@@ -26,7 +26,7 @@ setup(
     include_package_data=False,
     zip_safe=False,
     platforms='any',
-    install_requires=['httpx'],
+    install_requires=['httpx==0.9.3', 'dataclass;python_version<"3.7"'],
     extras_require={
         'dev': [
             'pytest>=3',

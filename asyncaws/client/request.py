@@ -1,6 +1,6 @@
 
 import httpx
-from .datastructures import MultiDict
+from .datastructures import MultiDict, HeaderDict
 from urllib.parse import urlencode
 
 class Request:
@@ -14,11 +14,12 @@ class Request:
 
         self.method = method
         self.url = url
-        self.headers = MultiDict()
-        self.data = data
-        self.params = params
+        self.headers = HeaderDict()
+        self.params = params or MultiDict()
         self.auth_path = auth_path
         self.stream_output = stream_output
+        self._body = ""
+        self.data = data
         self.body = data
         # This is a dictionary to hold information that is used when
         # processing the request. What is inside of ``context`` is open-ended.
@@ -28,6 +29,14 @@ class Request:
         # sent over the wire; the information is only used to assist in
         # creating what is sent over the wire.
         self.context = {}
+
+    @property
+    def body(self):
+        return self._body
+
+    @body.setter
+    def body(self, data):
+        self._body = data
         self._finalize_body()
 
     def _to_utf8(self, item):
@@ -40,7 +49,7 @@ class Request:
 
     def _finalize_body(self):
         """Prepares the given HTTP body data."""
-        body = self.data
+        body = self._body
         if body == b'':
             body = None
 
@@ -53,6 +62,25 @@ class Request:
 
         self.body = body
 
-    async def get(self):
-        pass
+    def get_client(self):
+        try:
+            return httpx.AsyncClient()
+        except:
+            return httpx
+
+    async def __call__(self):
+        client = self.get_client()
+        if not self.stream_output:
+            ret = await client.get(self.method.upper(),
+                self.url,
+                headers=self.headers.allitems(),
+                params=self.params.allitems())
+            return ret
+        else:
+            async with client.stream(self.method.upper(),
+                self.url,
+                headers=self.headers.allitems(),
+                params=self.params.allitems()) as response:
+                async for chunk in response.aiter_bytes():
+                    pass
 

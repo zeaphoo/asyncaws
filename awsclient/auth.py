@@ -24,8 +24,8 @@ import time
 import calendar
 import json
 
-from asyncaws.client.exceptions import NoCredentialsError
-from asyncaws.client.utils import normalize_url_path, percent_encode_sequence
+from awsclient.exceptions import NoCredentialsError
+from awsclient.utils import normalize_url_path, percent_encode_sequence
 from urllib.parse import quote, unquote, urlsplit, parse_qs
 from urllib.parse import urlunsplit
 from base64 import encodebytes

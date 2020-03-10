@@ -1,7 +1,7 @@
 
-class AsyncAWSClientError(Exception):
+class AWSClientError(Exception):
     """
-    The base exception class for AsyncAWS exceptions.
+    The base exception class for AWSClient exceptions.
 
     :ivar msg: The descriptive message associated with the error.
     """
@@ -13,7 +13,7 @@ class AsyncAWSClientError(Exception):
         self.kwargs = kwargs
 
 
-class NoCredentialsError(AsyncAWSClientError):
+class NoCredentialsError(AWSClientError):
     """
     No credentials could be found
     """

@@ -5,7 +5,7 @@ import sys
 import io
 import re
 
-with io.open('asyncaws/__init__.py', 'rt', encoding='utf8') as f:
+with io.open('awsclient/__init__.py', 'rt', encoding='utf8') as f:
     version = re.search(r'__version__ = \'(.*?)\'', f.read()).group(1)
 
 with open('README.md', 'rb') as f:
@@ -13,16 +13,16 @@ with open('README.md', 'rb') as f:
 
 
 setup(
-    name='asyncaws',
+    name='awsclient',
     version=version,
-    url='https://github.com/zeaphoo/asyncaws/',
+    url='https://github.com/zeaphoo/awsclient/',
     license='MIT',
     author='Wei Zhuo',
     author_email='zeaphoo@qq.com',
     description='asyncio aws sdk.',
     long_description=long_description,
     long_description_content_type="text/markdown",
-    packages=['asyncaws'],
+    packages=['awsclient'],
     include_package_data=False,
     zip_safe=False,
     platforms='any',
